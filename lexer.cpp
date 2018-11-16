@@ -3,23 +3,40 @@
 #include<string>
 
 using namespace std;
- int main()
+int main()
 { char ch;
-    std::ifstream fs("--tokenize.txt");
-if(fs)
-{ while(fs.get(ch))
-   // std::cout<<ch<<"\n";
-}
+    int line=0;    std::ifstream fs("--tokenize.txt");
+    if(fs)
+    { 
+        while(fs.get(ch))
+                { 
+         if(ch =='_'|| 'a'||0)
+            {
+                line++;
+                std::cout<<line<<":"<<":"<<" "<<"identifier"<<" "<<ch<<"\n";
+            }
+            else if(ch==':')
+
+            {
+                line++;
+                std::cout<<line<<":"<<":"<<" "<<"diff"<<" "<<ch<<"\n";
+
+            }
+
+        }
+
+
+    }
     if(fs.eof())
-    std::cout<<"end reached";
+        std::cout<<"end reached";
 
 
 
 
-fs.close();
+    fs.close();
 
 
-return 0;
+    return 0;
 
 }
 
