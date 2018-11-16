@@ -10,10 +10,12 @@ int main(int argc,char *argv[])
 std::cout<<i<<" "<<argv[i]<<"\n";
 char * str; str=argv[1];
 cout<<str<<"\n";
-cout<<" ";
-if (str=="--tokenize ")
-        cout<<" success";
+if (str=="--tokenize")
+{
+    cout<<"\nsuccess";
 
+
+}
 else
 {
 
