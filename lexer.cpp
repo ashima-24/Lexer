@@ -13,7 +13,7 @@ void readtoken(string str1)
     while((ch=fs.get())!=EOF)
     {
         ++pos;
-        if (ch=='\n')
+       if (ch=='\n') 
         {          ++line;
             pos=1;         
         }
@@ -27,6 +27,27 @@ void readtoken(string str1)
         {
             cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"constant"<<" "<<ch<<"\n" ;
 
+        }
+        else if(ch=='['||ch==']'||ch=='('||ch==')'||ch=='{'||ch=='}'||ch=='.'||ch=='+'||ch=='-'||ch=='&'||ch=='*'||ch=='+'||ch=='-'||ch=='~'||ch=='!'
+                ||ch=='%'||ch=='<'||ch=='>'||ch=='='||ch=='^'||ch=='|'||ch=='?'||ch==':'||ch==';'||ch==','||ch=='#')
+             {
+               
+             cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"punctuator"<<" "<<ch<<"\n" ;
+
+
+         }
+        else if (ch=='/')
+        {
+     cout<<ch;
+            ch= fs.get();
+     cout<<ch;
+if(ch=='/')
+{
+     cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"comment"<<" "<<ch<<"\n" ;
+
+}
+        
+        
         }
 
     }
