@@ -31,21 +31,19 @@ void readtoken(string str1)
         else if(ch=='['||ch==']'||ch=='('||ch==')'||ch=='{'||ch=='}'||ch=='.'||ch=='+'||ch=='-'||ch=='&'||ch=='*'||ch=='+'||ch=='-'||ch=='~'||ch=='!'
                 ||ch=='%'||ch=='<'||ch=='>'||ch=='='||ch=='^'||ch=='|'||ch=='?'||ch==':'||ch==';'||ch==','||ch=='#')
              {
-               
-             cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"punctuator"<<" "<<ch<<"\n" ;
+             
+                 char c=fs.peek();
+                     if(c=='+')
+   
+                   cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"punctuator"<<" "<<ch<<"\n" ;
+
+                     else
+
+                           cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"punctuator"<<" "<<ch<<"\n" ;
 
 
          }
-        else if (ch=='/')
-        {
-     cout<<ch;
-            ch= fs.get();
-     cout<<ch;
-if(ch=='/')
-{
-     cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"comment"<<" "<<ch<<"\n" ;
 
-}
         
         
         }
@@ -54,7 +52,7 @@ if(ch=='/')
 
 
 
-}
+
 int main(int argc,char *argv[])
 { 
     int i;
