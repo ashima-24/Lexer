@@ -7,6 +7,7 @@ using namespace std;
 
 void readtoken(string str1)
 {
+    char c;  
     ifstream fs(str1);
     cout<<"success\n";
     char ch; int line=1,pos=0;
@@ -22,7 +23,7 @@ void readtoken(string str1)
 
             cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"identifier"<<" "<<ch<<"\n" ;
         }
-        else if(ch=='\''||ch=='\"'|| ch=='\t'||ch=='\?'||ch=='\\'||ch=='\n'||ch=='\a'||ch=='\b'||ch=='\f'||ch=='\r'||ch=='\v')
+        else if(ch=='\''|| ch=='\t'||ch=='\?'||ch=='\\'||ch=='\n'||ch=='\a'||ch=='\b'||ch=='\f'||ch=='\r'||ch=='\v')
 
         {
             cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"constant"<<" "<<ch<<"\n" ;
@@ -37,46 +38,12 @@ void readtoken(string str1)
 
 
         }
-
-        else if(ch=='/')
+        else if(ch=='\"')
         {
-            char c=fs.peek();
-            if(c=='*')
-            {
 
-cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"comment  multi line"<<" "<<ch<<c<<"\n" ;
- 
-
-            }
-            else if(c=='/')
-            {
-                char p=fs.peek() ;
-                if(p=='\\')
-                {
-                cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"comment two  line"<<" "<<ch<<c<<"\n" ;
- 
-
-                
-                } 
-                
-                else
-               {
-                cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"comment single line"<<" "<<ch<<c<<"\n" ;
+            cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"string-literal"<<" "<<ch<<"\n" ;
 
 
-               while((ch=fs.get())!='\n');
-                   
-                ++line; 
-                pos=0;
-               } 
-           
-
-            }
-            else if (c=='=')
-                cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"punctuator"<<" "<<ch<<"\n" ;
-
-            else
-                cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"punctuator"<<" "<<ch<<"\n" ;
 
 
 
@@ -84,9 +51,62 @@ cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"comment  multi line"<<" "<<ch<<c<<"\
         }
 
 
+        else if(ch=='/')
+        { char r;
+            c=fs.peek();
+
+            if(c=='*')
+            {
+            while((c=fs.get())!='*')
+           {
+           ++pos;
+       
+        if(c=='\n')
+               ++line;
+           }
+               
+            if(c=='*')
+            {
+             cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"comment  multi line"<<" "<<"/* */"<<"\n" ;
+ 
+
+            }
+                 
+
+
+
+            }
+
+       
+
+            else if(c=='/')
+            {
+                cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"comment single line"<<" "<<ch<<c<<"\n" ;
+
+
+                while((ch=fs.get())!='\n');
+
+                ++line; 
+                pos=0;
+            } 
+
+
+       
+        else if (c=='=')
+            cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"punctuator"<<" "<<ch<<"\n" ;
+
+        else
+            cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"punctuator"<<" "<<ch<<"\n" ;
+
+
 
 
     }
+
+
+
+
+}
 
 }
 
