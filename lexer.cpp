@@ -13,7 +13,7 @@ void readtoken(string str1)
     while((ch=fs.get())!=EOF)
     {
         ++pos;
-       if (ch=='\n') 
+        if (ch=='\n') 
         {          ++line;
             pos=1;         
         }
@@ -30,25 +30,65 @@ void readtoken(string str1)
         }
         else if(ch=='['||ch==']'||ch=='('||ch==')'||ch=='{'||ch=='}'||ch=='.'||ch=='+'||ch=='-'||ch=='&'||ch=='*'||ch=='+'||ch=='-'||ch=='~'||ch=='!'
                 ||ch=='%'||ch=='<'||ch=='>'||ch=='='||ch=='^'||ch=='|'||ch=='?'||ch==':'||ch==';'||ch==','||ch=='#')
-             {
-             
-                 char c=fs.peek();
-                     if(c=='+')
-   
-                   cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"punctuator"<<" "<<ch<<"\n" ;
-
-                     else
-
-                           cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"punctuator"<<" "<<ch<<"\n" ;
+        {
 
 
-         }
+            cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"punctuator"<<" "<<ch<<"\n" ;
 
-        
-        
+
         }
 
+        else if(ch=='/')
+        {
+            char c=fs.peek();
+            if(c=='*')
+            {
+
+cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"comment  multi line"<<" "<<ch<<c<<"\n" ;
+ 
+
+            }
+            else if(c=='/')
+            {
+                char p=fs.peek() ;
+                if(p=='\\')
+                {
+                cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"comment two  line"<<" "<<ch<<c<<"\n" ;
+ 
+
+                
+                } 
+                
+                else
+               {
+                cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"comment single line"<<" "<<ch<<c<<"\n" ;
+
+
+               while((ch=fs.get())!='\n');
+                   
+                ++line; 
+                pos=0;
+               } 
+           
+
+            }
+            else if (c=='=')
+                cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"punctuator"<<" "<<ch<<"\n" ;
+
+            else
+                cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"punctuator"<<" "<<ch<<"\n" ;
+
+
+
+
+        }
+
+
+
+
     }
+
+}
 
 
 
