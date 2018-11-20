@@ -64,11 +64,12 @@ void readtoken(string str1)
         if(c=='\n')
                ++line;
            }
-               
+            
+            
             if(c=='*')
             {
              cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"comment  multi line"<<" "<<"/* */"<<"\n" ;
- 
+                  
 
             }
                  
