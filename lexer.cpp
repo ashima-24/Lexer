@@ -2,11 +2,13 @@
 #include<fstream>
 #include<string>
 #include<ctype.h>
+#include<vector>
 
 using namespace std;
 
 void readtoken(string str1)
-{
+{ 
+    vector<char> sl;
     char c;  
     ifstream fs(str1);
     cout<<"success\n";
@@ -41,9 +43,9 @@ void readtoken(string str1)
         else if(ch=='\"')
         {
 
-            cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"string-literal"<<" "<<ch<<"\n" ;
 
 
+            cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"string-literal" <<ch<<"\n" ;
 
 
 
@@ -52,33 +54,37 @@ void readtoken(string str1)
 
 
         else if(ch=='/')
-        { char r;
+        { char r; int len;
             c=fs.peek();
 
             if(c=='*')
             {
-            while((c=fs.get())!='*')
-           {
-           ++pos;
-       
-        if(c=='\n')
-               ++line;
-           }
-            
-            
-            if(c=='*')
-            {
-             cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"comment  multi line"<<" "<<"/* */"<<"\n" ;
-                  
+                while((c=fs.get())!='*')
+                {
+
+                    pos++;
+                    if(c=='\n')
+                        ++line;
+
+
+                }
+
+
+                if(c=='*')
+                {
+                    cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"comment  multi line"<<" "<<"/* */"<<"\n" ;
+
+
+                }
+
+
+
+
+
 
             }
-                 
 
 
-
-            }
-
-       
 
             else if(c=='/')
             {
@@ -92,27 +98,18 @@ void readtoken(string str1)
             } 
 
 
-       
-        else if (c=='=')
-            cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"punctuator"<<" "<<ch<<"\n" ;
 
-        else
-            cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"punctuator"<<" "<<ch<<"\n" ;
+            else if (c=='=')
+                cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"punctuator"<<" "<<ch<<"\n" ;
 
+            else
+                cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"punctuator"<<" "<<ch<<"\n" ;
 
-
+        }
 
     }
 
-
-
-
 }
-
-}
-
-
-
 
 int main(int argc,char *argv[])
 { 
