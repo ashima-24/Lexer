@@ -8,11 +8,11 @@ using namespace std;
 
 void readtoken(string str1)
 { 
-    vector<char> sl;
+    char sl[1000];
     char c;  
     ifstream fs(str1);
     cout<<"success\n";
-    char ch; int line=1,pos=0;
+    int i;    char ch; int line=1,pos=0;
     while((ch=fs.get())!=EOF)
     {
         ++pos;
@@ -42,10 +42,19 @@ void readtoken(string str1)
         }
         else if(ch=='\"')
         {
+            sl[0]='\"'; 
+            i=1;
 
-
-
-            cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"string-literal" <<ch<<"\n" ;
+           while(c=fs.get()!='\"')
+            {
+                sl[i]=c;
+                ++i;
+            }
+              sl[i]='\"';
+           cout<<i;
+           for(int e=0;e<=i+1;e++)
+               cout<<sl[e]<<"";
+//            cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"string-literal" <ch<<"\n" ;
 
 
 
@@ -59,10 +68,10 @@ void readtoken(string str1)
 
             if(c=='*')
             {
-                while((c=fs.get())!='*')
+                while((c=fs.get())!='*'&& (r=fs.peek())!='/')
                 {
 
-                    pos++;
+                    cout<<c<<" "<<r<<"\n";  
                     if(c=='\n')
                         ++line;
 
@@ -70,7 +79,8 @@ void readtoken(string str1)
                 }
 
 
-                if(c=='*')
+
+                if(c=='/')
                 {
                     cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"comment  multi line"<<" "<<"/* */"<<"\n" ;
 
