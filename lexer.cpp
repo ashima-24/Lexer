@@ -8,7 +8,7 @@ using namespace std;
 
 void readtoken(string str1)
 { 
-    char sl[1000];
+    char sl[1000]={'\0'};
     char c;  
     ifstream fs(str1);
     cout<<"success\n";
@@ -47,7 +47,7 @@ void readtoken(string str1)
 
            while(c=fs.get()!='\"')
             {
-                sl[i]=c;
+               sl[i]=c;
                 ++i;
             }
               sl[i]='\"';
@@ -68,19 +68,18 @@ void readtoken(string str1)
 
             if(c=='*')
             {
-                while((c=fs.get())!='*'&& (r=fs.peek())!='/')
+                while((c=fs.get())!='*'&& (c=fs.peek())!='/')
                 {
-
-                    cout<<c<<" "<<r<<"\n";  
+                     
                     if(c=='\n')
                         ++line;
 
 
                 }
 
+                cout<<c<<"\n";
 
-
-                if(c=='/')
+                if(c=='*')
                 {
                     cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"comment  multi line"<<" "<<"/* */"<<"\n" ;
 
