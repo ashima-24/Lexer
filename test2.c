@@ -1,2 +1,3 @@
-"My" test program  a = b * c
- 
+/*uip*/
+test program  a = b * c
+ char b;

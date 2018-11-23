@@ -9,12 +9,19 @@ using namespace std;
 void readtoken(string str1)
 { 
     char sl[1000]={'\0'};
-    char c;  
+    char c;
+    string buffer; 
+    string keywrd="char";
     ifstream fs(str1);
     cout<<"success\n";
-    int i;    char ch; int line=1,pos=0;
+    int i,npos;    char ch; int line=1,pos=0;
     while((ch=fs.get())!=EOF)
-    {
+    { 
+        //        getline(fs,buffer);
+        //   size_t npos = buffer.find(keywrd,0);
+
+        //cout<<"found "<<" "<<npos;
+
         ++pos;
         if (ch=='\n') 
         {          ++line;
@@ -45,16 +52,16 @@ void readtoken(string str1)
             sl[0]='\"'; 
             i=1;
 
-           while(c=fs.get()!='\"')
+            while(c=fs.get()!='\"')
             {
-               sl[i]=c;
+                sl[i]=c;
                 ++i;
             }
-              sl[i]='\"';
-           cout<<i;
-           for(int e=0;e<=i+1;e++)
-               cout<<sl[e]<<"";
-//            cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"string-literal" <ch<<"\n" ;
+            sl[i]='\"';
+            cout<<i;
+            for(int e=0;e<=i+1;e++)
+                cout<<sl[e]<<"";
+            //            cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"string-literal" <ch<<"\n" ;
 
 
 
@@ -63,87 +70,98 @@ void readtoken(string str1)
 
 
         else if(ch=='/')
-        { char r; int len;
+        { char r, k;
+            int len,count=0;
             c=fs.peek();
 
             if(c=='*')
-            {
-                while((c=fs.get())!='*'&& (c=fs.peek())!='/')
+            {  fs.seekg(1,ios::cur);
+                while((r=fs.get())!='*'&& (k=fs.peek())!='/')
+
                 {
-                     
-                    if(c=='\n')
-                        ++line;
+                    cout<<r<<" "<<k<<"\n";
+                    count++;
+
+                     fs.seekg(1,ios::cur);
+                        if(c=='\n')
+                            ++line;
+
+
+                    }
+
+
+                    cout<<r<<" "<<k;               
+
+
+
+                    cout<<"count="<<count;
+                    if(r=='*')
+                    {
+
+
+                        cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"comment  multi line"<<" "<<"/* */"<<"\n" ;
+
+
+                    }
+
+
+
+
 
 
                 }
 
-                cout<<c<<"\n";
 
-                if(c=='*')
+
+                else if(c=='/')
                 {
-                    cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"comment  multi line"<<" "<<"/* */"<<"\n" ;
+                    cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"comment single line"<<" "<<ch<<c<<"\n" ;
 
 
-                }
+                    while((ch=fs.get())!='\n');
+
+                    ++line; 
+                    pos=0;
+                } 
 
 
 
+                else if (c=='=')
+                    cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"punctuator"<<" "<<ch<<"\n" ;
 
-
+                else
+                    cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"punctuator"<<" "<<ch<<"\n" ;
 
             }
-
-
-
-            else if(c=='/')
-            {
-                cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"comment single line"<<" "<<ch<<c<<"\n" ;
-
-
-                while((ch=fs.get())!='\n');
-
-                ++line; 
-                pos=0;
-            } 
-
-
-
-            else if (c=='=')
-                cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"punctuator"<<" "<<ch<<"\n" ;
-
-            else
-                cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"punctuator"<<" "<<ch<<"\n" ;
 
         }
 
     }
 
-}
+    int main(int argc,char *argv[])
+    { 
+        int i;
+        //std::cout<<argc<<"\n";
 
-int main(int argc,char *argv[])
-{ 
-    int i;
-    //std::cout<<argc<<"\n";
+        for( i=0;i<argc;i++)
+        {
+            std::cout<<i<<" "<<argv[i]<<"\n";
+        }
 
-    for( i=0;i<argc;i++)
-    {
-        std::cout<<i<<" "<<argv[i]<<"\n";
+        string str; str=argv[1];
+
+        if (str.compare("--tokenize")==0)
+        {
+            readtoken(argv[2]);   
+
+        }
+
+
+
+
+
+
+        return 0;
+
     }
-
-    string str; str=argv[1];
-
-    if (str.compare("--tokenize")==0)
-    {
-        readtoken(argv[2]);   
-
-    }
-
-
-
-
-
-
-    return 0;
-
-}
 
