@@ -7,28 +7,59 @@
 using namespace std;
 
 void readtoken(string str1)
-{ 
-
+{ int count_str=0; 
     char c;
+    char  *key[]={"char","auto","break","case","char","const","continue","default","do","double","else",
+        "enum","extern","float", "for","goto","if","inline","int","long","register","restrict","return","short",
+        "signed","sizeof","static","struct","switch","typedef","union","unsigned""void","volatile","while",
+        "_Alignas","_Alignof","_Atomic","_Bool","_Complex","_Generic","_Imaginary","_Noreturn","_Static_assert",
+        "_Thread_local" };
 
-    string keywrd="char";
+    string keywrd;
     ifstream fs(str1);
     cout<<"success\n";
-    int i;    char ch; int line=1,pos=0;
+    int i,flag=0;    char ch; int line=1,pos=0;
+
     while((ch=fs.get())!=EOF)
     { 
 
 
-        ++pos;
         if (ch=='\n') 
         {          ++line;
             pos=1;         
-        }
-        if(isalnum(ch)|| ch == '_' )
-        {
+        }    
 
-            cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"identifier"<<" "<<ch<<"\n" ;
+
+        if(isalpha(ch)|| ch == '_' )
+        {
+            flag=0;            ++pos;
+            string iden;
+            iden+=ch;
+            while( (isalnum(ch=fs.get() ) ) && ch !='EOF')
+            {
+
+                iden+=ch;
+
+
+            }
+
+            // cout<<iden<<"\n";
+            for(int h=0;h<44;h++)
+            {
+                keywrd=key[h]; 
+                if((iden.compare(keywrd))==0)
+                    flag=1;
+            }
+            //       cout<<"flag="<<flag<<"\n";
+            if(flag==1)
+                cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"Keyword"<<" "<<iden<<"\n" ;
+
+            else   
+                cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"identifier"<<" "<<iden<<"\n" ;
+
+
         }
+
         else if(ch=='\''|| ch=='\t'||ch=='\?'||ch=='\\'||ch=='\n'||ch=='\a'||ch=='\b'||ch=='\f'||ch=='\r'||ch=='\v')
 
         {
@@ -78,7 +109,7 @@ void readtoken(string str1)
                         cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"comment  multi line"<<" "<<"/* */"<<"\n" ;
                         break;
                     } else {
-                        cout<<currCh<<"\t"<<nextCh<<"\n";
+                        //         cout<<currCh<<"\t"<<nextCh<<"\n";
                         count++;
                         if (currCh == '\n') {
                             ++line;
@@ -97,13 +128,18 @@ void readtoken(string str1)
 
             else if(c=='/')
             {
-                cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"comment single line"<<" "<<ch<<c<<"\n" ;
 
+
+
+                cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"comment single line"<<" "<<ch<<c<<"\n" ;
 
                 while((ch=fs.get())!='\n');
 
                 ++line; 
                 pos=0;
+
+
+
             } 
 
 
