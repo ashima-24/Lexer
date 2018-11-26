@@ -35,7 +35,7 @@ void readtoken(string str1)
             flag=0;            ++pos;
             string iden;
             iden+=ch;
-            while( (isalnum(ch=fs.get() ) ) && ch !='EOF')
+            while(  (isalnum(ch=fs.get() ) ) || ch=='_' && ch !='EOF')
             {
 
                 iden+=ch;
