@@ -60,11 +60,34 @@ void readtoken(string str1)
 
         }
 
-        if(isdigit(ch)||ch=='\''||ch=='\?'||ch=='\\'||ch=='\a'||ch=='\b'||ch=='\f'||ch=='\r'||ch=='\v')
+        if(isdigit(ch)||ch=='\?'|| ch=='\\'||ch=='\a'||ch=='\b'|| ch=='\f'|| ch=='\r'|| ch=='\v')
 
         {
             cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"constant"<<" "<<ch<<"\n" ;
+          
+        }
+        if(ch=='\'')
+        {
+        char currcons;
+        char nxtcons;
+        currcons=fs.get();
+        nxtcons=fs.peek();
+        if(isalpha(currcons) && nxtcons=='\'' )
+        { cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"character constant"<<" "<<currcons<<"\n" ;
+       
+        }
+       /*     else if(currcons=='\?'|| currcons=='\\'||currcons=='\a'||currcons=='\b'|| currcons=='\f'|| currcons=='\r'|| ch=='\v' && nxtcons=='\'')
+            {
+            
+         cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<" constant"<<" "<<currcons<<"\n" ;
+        
 
+            }
+        else        {
+         cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"error: wrong constant"<<"\n" ;
+       
+        }*/
+        
         }
         if(ch=='['||ch==']'||ch=='('||ch==')'||ch=='{'||ch=='}'||ch=='.'||ch=='+'||ch=='-'||ch=='&'||ch=='*'||ch=='+'||ch=='-'||ch=='~'||ch=='!'
                 ||ch=='%'||ch=='<'||ch=='>'||ch=='='||ch=='^'||ch=='|'||ch=='?'||ch==':'||ch==';'||ch==','||ch=='#')
