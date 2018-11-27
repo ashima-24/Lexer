@@ -9,7 +9,7 @@ using namespace std;
 void readtoken(string str1)
 { int count_str=0; 
     char c;
-    char  *key[]={"char","auto","break","case","char","const","continue","default","do","double","else",
+    string  key[]={"char","auto","break","case","char","const","continue","default","do","double","else",
         "enum","extern","float", "for","goto","if","inline","int","long","register","restrict","return","short",
         "signed","sizeof","static","struct","switch","typedef","union","unsigned""void","volatile","while",
         "_Alignas","_Alignof","_Atomic","_Bool","_Complex","_Generic","_Imaginary","_Noreturn","_Static_assert",
@@ -35,7 +35,7 @@ void readtoken(string str1)
             flag=0;            ++pos;
             string iden;
             iden+=ch;
-            while(  (isalnum(ch=fs.get() ) ) || ch=='_' && ch !='EOF')
+            while((isalnum(ch=fs.get()) || ch=='_') && ch !=EOF)
             {
 
                 iden+=ch;
@@ -44,10 +44,9 @@ void readtoken(string str1)
             }
 
             // cout<<iden<<"\n";
-            for(int h=0;h<44;h++)
+            for(int h=0;h<(sizeof(key)/sizeof(string));h++) 
             {
-                keywrd=key[h]; 
-                if((iden.compare(keywrd))==0)
+                if(iden == key[h]) 
                     flag=1;
             }
             //       cout<<"flag="<<flag<<"\n";
