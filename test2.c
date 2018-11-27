@@ -1,4 +1,4 @@
-char test program  a = b * c
+"char test program  a = b * 
 int main()
 {
 _Imaginary

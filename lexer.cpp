@@ -9,6 +9,7 @@ using namespace std;
 void readtoken(string str1)
 { int count_str=0; 
     char c;
+
     string  key[]={"char","auto","break","case","char","const","continue","default","do","double","else",
         "enum","extern","float", "for","goto","if","inline","int","long","register","restrict","return","short",
         "signed","sizeof","static","struct","switch","typedef","union","unsigned""void","volatile","while",
@@ -59,7 +60,7 @@ void readtoken(string str1)
 
         }
 
-        if(isdigit(ch)||ch=='\''|| ch=='\t'||ch=='\?'||ch=='\\'||ch=='\n'||ch=='\a'||ch=='\b'||ch=='\f'||ch=='\r'||ch=='\v')
+        if(isdigit(ch)||ch=='\''||ch=='\?'||ch=='\\'||ch=='\a'||ch=='\b'||ch=='\f'||ch=='\r'||ch=='\v')
 
         {
             cout<<str1<<":"<<line<<":"<<pos<<":"<<" "<<"constant"<<" "<<ch<<"\n" ;
@@ -80,7 +81,8 @@ void readtoken(string str1)
 
             while((c=fs.get()) !='\"')
             {
-                sl += c;
+         
+             sl += c;
                 //        cout<<"sl +"<<c <<" ="<<sl<<"\n";
             }
 
@@ -95,11 +97,11 @@ void readtoken(string str1)
             int len,count=0;
             c=fs.peek();
 
+            char currCh;
+            char nextCh;
             if(c=='*')
             {  
                 c = fs.get();
-                char currCh;
-                char nextCh;
                 while(1) {
                     currCh = fs.get();
                     nextCh = fs.peek();
@@ -114,7 +116,12 @@ void readtoken(string str1)
                             ++line;
                         }
                     }
+                    if(currCh !='*' && nextCh !='/' && currCh==EOF) 
+                    {    cout<<str1<<":"<<line<<":"<<pos<<":"<<"error: Multi line comment unterminated"<<"\n";
+break;
                 }
+                }
+
 
 
 
@@ -162,7 +169,7 @@ int main(int argc,char *argv[])
 
     for( i=0;i<argc;i++)
     {
-        std::cout<<i<<" "<<argv[i]<<"\n";
+//        std::cout<<i<<" "<<argv[i]<<"\n";
     }
 
     string str; str=argv[1];
@@ -173,7 +180,11 @@ int main(int argc,char *argv[])
 
     }
 
-
+    else 
+    {
+    cout<<"error: File is not tokenized properly"<<"\n";
+    return 1;
+    }
 
 
 
