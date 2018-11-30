@@ -16,6 +16,9 @@ int     main    (   int argc, char **argv) {
 
     int a123 =12;
     int a = (1 + 2234);
+    float g = 2234.0;
+    float r = 0.00;
+    float dy = .9;
     int b = a++;
     int c = ++b;
     int d = a+++++a;
