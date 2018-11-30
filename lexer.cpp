@@ -58,14 +58,12 @@ void readtoken(string filename)
     ifstream fs(filename);
     char ch;
     int line = 1, pos = 0;
-    int col = 0;
        
     while((ch = fs.get()) != EOF)
     {
         if (ch == '\n') 
         { 
             ++line;
-            col = 0;
             pos = 0;         
         }    
         else if(ch == ' ')
