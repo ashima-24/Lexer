@@ -6,83 +6,155 @@
 
 using namespace std;
 
+void printError(string fileName, int line, int column, const string &message) {
+    cerr<<fileName<<":"<<line<<":"<<column<<": error : "<<message<<"\n";
+}
+
+void printOutput(string fileName, int line, int column, const string &output, const string &message) {
+    cout<<fileName<<":"<<line<<":"<<column<<": "<<output<<" "<<message<<"\n";
+}
+
+bool isPunctuatorChar(char ch) {
+    char punctuators[] = {
+        '+', '-', '/', '%', '~' , 
+        '[', ']', '(', ')', '{', '}', '.',
+        '&', '*', '!', '?', ':', ';', '<', '>',
+        '=', '#', ',', '|', '^'
+    };
+    
+    for(int i = 0; i < (sizeof(punctuators) / sizeof(char)); i++)
+    {
+
+        if(ch == punctuators[i])
+            return true;
+    }
+
+    return false;
+}
+
+bool isPunctuator(string str) {
+    string punctuators[] = {
+        "[", "]", "(", ")", "{", "}", ".", "->",
+        "++", "--", "&", "*", "+", "-", "~", "!",
+        "/", "%", "<<", ">>", "<", ">", "<=", ">=",
+        "?", ":" , ";", "...",
+        "=", "*=", "/=", "%=", "+=", "-=", "<<=",
+        ",", "#", "##","|","^"
+        "<:", ":>", "<%", "%>", "%:", "%:%:",
+        "==", ">>=", "!=", "&=", "^=", "&&", "||", "|="  
+    };
+
+    for(int i = 0; i < (sizeof(punctuators) / sizeof(string)); i++)
+    {
+
+        if(str.compare(punctuators[i]) == 0)
+            return true;    
+    }
+
+    return false;
+}
+
 void readtoken(string filename)
 {
-    
-   string  key[] = {"char",
-                    "auto",
-                    "break",
-                    "case",
-                    "char",
-                    "const",
-                    "continue",
-                    "default",
-                    "do",
-                    "double",
-                    "else",
-                    "enum",
-                    "extern",
-                    "float",
-                    "for",
-                    "goto",
-                    "if",
-                    "inline",
-                    "int",
-                    "long",
-                    "register",
-                    "restrict",
-                    "return",
-                    "short",
-                    "signed",
-                    "sizeof",
-                    "static",
-                    "struct",
-                    "switch",
-                    "typedef",
-                    "union",
-                    "unsigned",
-                    "void",
-                    "volatile",
-                    "while",
-                    "_Alignas",
-                    "_Alignof",
-                    "_Atomic",
-                    "_Bool",
-                    "_Complex",
-                    " _Generic",
-                    "_Imaginary",
-                    "_Noreturn",
-                    "_Static_assert",
-                    "_Thread_local" };
-    
+
+    string  key[] = {"char",
+        "auto",
+        "break",
+        "case",
+        "char",
+        "const",
+        "continue",
+        "default",
+        "do",
+        "double",
+        "else",
+        "enum",
+        "extern",
+        "float",
+        "for",
+        "goto",
+        "if",
+        "inline",
+        "int",
+        "long",
+        "register",
+        "restrict",
+        "return",
+        "short",
+        "signed",
+        "sizeof",
+        "static",
+        "struct",
+        "switch",
+        "typedef",
+        "union",
+        "unsigned",
+        "void",
+        "volatile",
+        "while",
+        "_Alignas",
+        "_Alignof",
+        "_Atomic",
+        "_Bool",
+        "_Complex",
+        " _Generic",
+        "_Imaginary",
+        "_Noreturn",
+        "_Static_assert",
+        "_Thread_local" };
+
     ifstream fs(filename);
     char ch;
     int line = 1, pos = 0;
-       
+
+    string currState;
+
+    char xyz;
     while((ch = fs.get()) != EOF)
     {
+        if (!isPunctuatorChar(ch))
+        {
+            int punctuatorPos = pos - currState.length();
+           
+            if(isPunctuator(currState))
+                printOutput(filename, line, punctuatorPos, "punctuator", currState);
+            else
+                printError(filename, line, punctuatorPos, "Invalid punctuator");
+            
+            currState = "";
+        }
+
+        currState += ch;
+        //cout<<currState;
+        //cin>>xyz;
+
         if (ch == '\n') 
-        { 
+        {
             ++line;
-            pos = 0;         
+            pos = 0;
+
+            currState = "";
         }    
         else if(ch == ' ')
         {
             ++pos;
-        
+            currState = "";
+
         }
         else if(isalpha(ch) || ch == '_' )
         {
             bool iskeyword = false;  
             int temp = 1;
+            char tempChar = ch;
             ++pos;
             string iden;
             iden += ch;
-         
-            while((isalnum(ch = fs.get()) || ch == '_') && ch != EOF)
+
+            while((isalnum(tempChar = fs.peek()) || ch == '_') && ch != EOF)
             {
                 iden += ch;
                 ++temp;  
+                tempChar = fs.get();
             }
 
             for(int h = 0; h < (sizeof(key)/sizeof(string)); h++) 
@@ -92,11 +164,13 @@ void readtoken(string filename)
             }
 
             if(iskeyword)
-                cout<<filename<<":"<<line<<":"<<pos<<":"<<" "<<"Keyword"<<" "<<iden<<"\n" ;
+                printOutput(filename, line, pos, "keyword", iden);
             else   
-                cout<<filename<<":"<<line<<":"<<pos<<":"<<" "<<"identifier"<<" "<<iden<<"\n" ;
-        
+                printOutput(filename, line, pos, "identifier", iden);
+
             pos += temp;
+
+            currState = "";
         }
         else if(isdigit(ch))
         {  
@@ -106,79 +180,63 @@ void readtoken(string filename)
             string constVal;
             char currChar = ch;
             char nextChar = fs.peek();
-           
+
             while(isdigit(currChar) || 
                     (currChar == '.' && isdigit(nextChar)))
             {
                 constVal += currChar;
                 temp++;
-                
+
                 currChar = fs.get();
                 nextChar = fs.peek();
             }
 
-            cout<<filename<<":"<<line<<":"<<pos<<":"<<" "<<"constant"<<" "<<constVal<<"\n" ;
+            printOutput(filename, line, pos, "constant", constVal);
             pos += temp;
+            currState = "";
         }
         else if(ch == '\'')
-        {
+        {   
             char currChar = fs.get();
+            string tmp = "";
+            tmp += currChar;
             char nextChar = fs.peek();
             if ((isalnum(currChar) ||
-                currChar == '\?' ||
-                currChar == '\\' ||
-                currChar == '\a' ||
-                currChar == '\b' ||
-                currChar == '\f' ||
-                currChar == '\r' || 
-                currChar == '\v') && (nextChar == '\'') ) 
+                        currChar == '\?' ||
+                        currChar == '\\' ||
+                        currChar == '\a' ||
+                        currChar == '\b' ||
+                        currChar == '\f' ||
+                        currChar == '\r' || 
+                        currChar == '\v') && (nextChar == '\'') ) 
             { 
                 ++pos;
-                cout<<filename<<":"<<line<<":"<<pos<<":"<<" "<<"character constant"<<" "<<currChar<<"\n" ;
+                printOutput(filename, line, pos, "constant", tmp);
             }
+            else if(currChar=='\'')
+                printOutput(filename, line, pos, "constant", tmp);
+
+            currState = "";
         }
-        else if(ch == '[' || 
-                ch == ']' || 
-                ch == '(' || 
-                ch == ')' ||
-                ch == '{' ||
-                ch == '}' ||
-                ch == '.' ||
-                ch == '+' ||
-                ch == '-' ||
-                ch == '&' ||
-                ch == '*' ||
-                ch == '+' ||
-                ch == '-' ||
-                ch == '~' ||
-                ch == '!' ||
-                ch == '%' ||
-                ch == '<' ||
-                ch == '>' ||
-                ch == '=' ||
-                ch == '^' ||
-                ch == '|' ||
-                ch == '?' ||
-                ch == ':' ||
-                ch == ';' ||
-                ch == ',' ||
-                ch == '#')
+        else if(isPunctuatorChar(ch))
         {
-            ++pos;
-            cout<<filename<<":"<<line<<":"<<pos<<":"<<" "<<"punctuator"<<" "<<ch<<"\n" ;
+             ++pos;
         }
         else if(ch == '\"' )
         {
             ++pos;
             string sl = "\"";
             char nextChar = ' ';
-            while((nextChar = fs.get()) != '\"')
+
+            while((nextChar = fs.peek()) != '\"')
             {
                 sl += nextChar;
+                nextChar = fs.get();
             }
 
             sl += '\"';
-            cout<<filename<<":"<<line<<":"<<pos<<":"<<" "<<"string-literal"<<" "<<sl<<"\n" ;
+            printOutput(filename, line, pos, "string-literal", sl);
+            currState = "";
         }
         else if(ch == '/')
         {   
@@ -187,7 +245,7 @@ void readtoken(string filename)
             int temp = 0;
             char currChar = ch;
             char nextChar = fs.peek();
-          
+
             if(nextChar == '*')
             {  
                 while(1)
@@ -197,7 +255,7 @@ void readtoken(string filename)
 
                     if (currChar == '*' && nextChar == '/') 
                     {
-                        cout<<filename<<":"<<line<<":"<<pos<<":"<<" "<<"comment  multi line"<<" "<<"/* */"<<"\n" ;
+                        printOutput(filename, line, pos, "multi-line comment", "/* */");
                         line = line + temp; 
                         break;
                     } 
@@ -210,30 +268,27 @@ void readtoken(string filename)
                             ++temp;
                         }
                     }
-                   
+
                     if(currChar != '*' && nextChar != '/' && currChar == EOF) 
                     {
-                        cout<<filename<<":"<<line<<":"<<pos<<":"<<"error: Multi line comment unterminated"<<"\n";
+                        printError(filename, line, pos, "error: unterminated multipline comment");
                         break;
                     }
                 }
 
+                currState = "";
             }
             else if(nextChar == '/')
             {
                 ++pos;
-                cout<<filename<<":"<<line<<":"<<pos<<":"<<" "<<"comment single line //"<<"\n" ;
+                printOutput(filename, line, pos, "single line comment", "//");
 
                 while((ch = fs.get()) != '\n');
-               
+
                 ++line; 
                 pos = 0;
+                currState = "";
             } 
-            else if (nextChar == '=')
-            { 
-                ++pos;
-                cout<<filename<<":"<<line<<":"<<pos<<":"<<" "<<"punctuator"<<" "<<ch<<"\n" ;
-            }
         }
     }
 }
