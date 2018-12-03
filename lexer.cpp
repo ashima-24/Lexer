@@ -112,21 +112,7 @@ void readtoken(string filename)
     char xyz;
     while((ch = fs.get()) != EOF)
     {
-        if (!isPunctuatorChar(ch))
-        {
-            int punctuatorPos = pos - currState.length();
-           
-            if(isPunctuator(currState))
-                printOutput(filename, line, punctuatorPos, "punctuator", currState);
-            else
-                printError(filename, line, punctuatorPos, "Invalid punctuator");
-            
-            currState = "";
-        }
-
         currState += ch;
-        //cout<<currState;
-        //cin>>xyz;
 
         if (ch == '\n') 
         {
@@ -150,9 +136,9 @@ void readtoken(string filename)
             string iden;
             iden += ch;
 
-            while((isalnum(tempChar = fs.peek()) || ch == '_') && ch != EOF)
+            while((isalnum(tempChar = fs.peek()) || tempChar == '_') && tempChar != EOF)
             {
-                iden += ch;
+                iden += tempChar;
                 ++temp;  
                 tempChar = fs.get();
             }
@@ -220,34 +206,27 @@ void readtoken(string filename)
         }
         else if(isPunctuatorChar(ch))
         {
-             ++pos;
-        }
-        else if(ch == '\"' )
-        {
             ++pos;
-            string sl = "\"";
-            char nextChar = ' ';
+            
+            string nextState = currState;
+            nextState += fs.peek();
 
-            while((nextChar = fs.peek()) != '\"')
+            if (nextState == "//")
             {
-                sl += nextChar;
-                nextChar = fs.get();
+                printOutput(filename, line, pos, "single line comment", "//");
+
+                while((ch = fs.get()) != '\n');
+
+                ++line; 
+                pos = 0;
+                currState = "";
             }
+            else if (nextState == "/*")
+            {
+                int temp = 0;
+                char currChar = fs.get();
+                char nextChar = fs.peek();
 
-            sl += '\"';
-            printOutput(filename, line, pos, "string-literal", sl);
-            currState = "";
-        }
-        else if(ch == '/')
-        {   
-            ++pos;
-            int count = 0;
-            int temp = 0;
-            char currChar = ch;
-            char nextChar = fs.peek();
-
-            if(nextChar == '*')
-            {  
                 while(1)
                 {
                     currChar = fs.get();
@@ -257,38 +236,52 @@ void readtoken(string filename)
                     {
                         printOutput(filename, line, pos, "multi-line comment", "/* */");
                         line = line + temp; 
+
+                        fs.get();
+
                         break;
                     } 
-                    else
+                    else if (currChar == '\n')
                     {
-                        count++;
-
-                        if (currChar == '\n')
-                        {
-                            ++temp;
-                        }
+                        ++temp;
                     }
-
-                    if(currChar != '*' && nextChar != '/' && currChar == EOF) 
+                    else if(currChar == EOF) 
                     {
                         printError(filename, line, pos, "error: unterminated multipline comment");
                         break;
                     }
                 }
-
+            
                 currState = "";
             }
-            else if(nextChar == '/')
+            else if(isPunctuator(currState) && !isPunctuator(nextState)) 
             {
-                ++pos;
-                printOutput(filename, line, pos, "single line comment", "//");
-
-                while((ch = fs.get()) != '\n');
-
-                ++line; 
-                pos = 0;
+                int punctuatorPos = pos - currState.length() + 2;
+                printOutput(filename, line, punctuatorPos, "punctuator", currState);
                 currState = "";
-            } 
+            }
+
+        }
+        else if(ch == '\"' )
+        {
+            ++pos;
+            string sl = "\"";
+            char nextChar = ' ';
+
+            while(((nextChar = fs.peek()) != '\"') && (nextChar != EOF))
+            {
+                sl += nextChar;
+                nextChar = fs.get();
+            }
+            
+            if(nextChar == EOF)
+                printError(filename, line, pos, "unterminated string-literal");
+            else
+            {
+                sl += fs.get();
+                printOutput(filename, line, pos, "string-literal", sl);
+            }
+            currState = "";
         }
     }
 }
