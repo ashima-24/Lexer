@@ -130,7 +130,7 @@ void readtoken(string filename)
         else if(isalpha(ch) || ch == '_' )
         {
             bool iskeyword = false;  
-            int temp = 1;
+            int temp = 0;
             char tempChar = ch;
             ++pos;
             string iden;
@@ -256,7 +256,7 @@ void readtoken(string filename)
             }
             else if(isPunctuator(currState) && !isPunctuator(nextState)) 
             {
-                int punctuatorPos = pos - currState.length() + 2;
+                int punctuatorPos = pos - currState.length() + 1;
                 printOutput(filename, line, punctuatorPos, "punctuator", currState);
                 currState = "";
             }
