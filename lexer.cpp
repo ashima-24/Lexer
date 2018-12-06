@@ -199,9 +199,12 @@ void readtoken(string filename)
                 ++pos;
                 printOutput(filename, line, pos, "constant", tmp);
             }
-            else if(currChar=='\'')
+            else if(currChar =='\'')
                 printOutput(filename, line, pos, "constant", tmp);
 
+            else
+                printError(filename, line, pos, "invalid constant");
+                
             currState = "";
         }
         else if(isPunctuatorChar(ch))
@@ -210,17 +213,54 @@ void readtoken(string filename)
             
             string nextState = currState;
             nextState += fs.peek();
-
+            
             if (nextState == "//")
-            {
-                printOutput(filename, line, pos, "single line comment", "//");
+            {   
+                char currChar = fs.get();
+                char nextChar = fs.peek();
+                if((currChar=fs.get()) == '\\')
+                {   
+                        nextChar = fs.peek();
+                        currChar = fs.get();
+                        
+                        if(currChar == '\n')
+                        {
+                            //printOutput(filename, line, pos, "two line comment", "//\\");
+                            ++line;
 
-                while((ch = fs.get()) != '\n');
+                            while((ch = fs.get()) != '\n');
 
-                ++line; 
-                pos = 0;
-                currState = "";
+                            ++line; 
+                            pos = 0;
+                            currState = "";
+
+                        }
+                        
+                        else
+                        {
+                           // printOutput(filename, line, pos, "single line comment", "//");
+
+                            while((ch = fs.get()) != '\n');
+
+                            ++line; 
+                            pos = 0;
+                            currState = "";
+                        }
+                        
+                }
+
+                else
+                {
+                   // printOutput(filename, line, pos, "single line comment", "//");
+
+                     while((ch = fs.get()) != '\n');
+
+                     ++line; 
+                     pos = 0;
+                     currState = "";
+                }
             }
+
             else if (nextState == "/*")
             {
                 int temp = 0;
@@ -234,7 +274,7 @@ void readtoken(string filename)
 
                     if (currChar == '*' && nextChar == '/') 
                     {
-                        printOutput(filename, line, pos, "multi-line comment", "/* */");
+                    //    printOutput(filename, line, pos, "multi-line comment", "/* */");
                         line = line + temp; 
 
                         fs.get();
@@ -247,13 +287,14 @@ void readtoken(string filename)
                     }
                     else if(currChar == EOF) 
                     {
-                        printError(filename, line, pos, "error: unterminated multipline comment");
+                        printError(filename, line, pos, "unterminated multi-line comment");
                         break;
                     }
                 }
             
                 currState = "";
             }
+            
             else if(isPunctuator(currState) && !isPunctuator(nextState)) 
             {
                 int punctuatorPos = pos - currState.length() + 1;
