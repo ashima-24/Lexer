@@ -1,4 +1,4 @@
-/*
+/*/r/n
  *My test program  a = b * c
  *
 */
@@ -7,14 +7,21 @@ const char* foo(int) {
     return "abcd";
 }
 
-// main()
+//  main()
 int     main    (   int argc, char **argv) {
+//\
+jkjkj
+
+//\kjkljlj
+
+//my
+
+char x ='\';
+char b = '';
+char h = 'a';
 
 
-
-
-
-    int a123 =12;
+    int  a123 =12;
     int a = (1 + 2234);
     float g = 2234.0;
     float r = 0.00;

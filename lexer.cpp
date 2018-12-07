@@ -21,7 +21,7 @@ bool isPunctuatorChar(char ch) {
         '&', '*', '!', '?', ':', ';', '<', '>',
         '=', '#', ',', '|', '^'
     };
-    
+
     for(int i = 0; i < (sizeof(punctuators) / sizeof(char)); i++)
     {
 
@@ -40,7 +40,7 @@ bool isPunctuator(string str) {
         "?", ":" , ";", "...",
         "=", "*=", "/=", "%=", "+=", "-=", "<<=",
         ",", "#", "##","|","^"
-        "<:", ":>", "<%", "%>", "%:", "%:%:",
+            "<:", ":>", "<%", "%>", "%:", "%:%:",
         "==", ">>=", "!=", "&=", "^=", "&&", "||", "|="  
     };
 
@@ -121,7 +121,7 @@ void readtoken(string filename)
 
             currState = "";
         }    
-        else if(ch == ' ')
+        else if(ch == ' '|| ch== '0x20')
         {
             ++pos;
             currState = "";
@@ -185,79 +185,89 @@ void readtoken(string filename)
         {   
             char currChar = fs.get();
             string tmp = "";
+            tmp += ch;
             tmp += currChar;
             char nextChar = fs.peek();
-            if ((isalnum(currChar) ||
-                        currChar == '\?' ||
-                        currChar == '\\' ||
-                        currChar == '\a' ||
-                        currChar == '\b' ||
-                        currChar == '\f' ||
-                        currChar == '\r' || 
-                        currChar == '\v') && (nextChar == '\'') ) 
+           
+             if ((isalnum(currChar) ||
+                    currChar == '\?' || 
+                    currChar == '\"' ||
+                    currChar == '\\' ||
+                    currChar == '\r' ||
+                    currChar == '\a' ||
+                    currChar == '\b' ||
+                    currChar == '\f' ||
+                    currChar == '\v') && (nextChar == '\'') ) 
             { 
                 ++pos;
+                tmp += fs.get();
                 printOutput(filename, line, pos, "constant", tmp);
+                pos += 2;
             }
             else if(currChar =='\'')
+            {   ++pos;
                 printOutput(filename, line, pos, "constant", tmp);
+                pos += 1;
+            }
+            else if (nextChar == EOF)
+                printError(filename, line, pos, "unterminated constant");
 
-            else
+            else 
                 printError(filename, line, pos, "invalid constant");
-                
+           
             currState = "";
         }
         else if(isPunctuatorChar(ch))
         {
             ++pos;
-            
+
             string nextState = currState;
             nextState += fs.peek();
-            
+
             if (nextState == "//")
             {   
                 char currChar = fs.get();
                 char nextChar = fs.peek();
                 if((currChar=fs.get()) == '\\')
                 {   
-                        nextChar = fs.peek();
-                        currChar = fs.get();
-                        
-                        if(currChar == '\n')
-                        {
-                            //printOutput(filename, line, pos, "two line comment", "//\\");
-                            ++line;
+                    nextChar = fs.peek();
+                    currChar = fs.get();
 
-                            while((ch = fs.get()) != '\n');
+                    if(currChar == '\n')
+                    {
+                        //printOutput(filename, line, pos, "two line comment", "//\\");
+                        ++line;
 
-                            ++line; 
-                            pos = 0;
-                            currState = "";
+                        while((ch = fs.get()) != '\n');
 
-                        }
-                        
-                        else
-                        {
-                           // printOutput(filename, line, pos, "single line comment", "//");
+                        ++line; 
+                        pos = 0;
+                        currState = "";
 
-                            while((ch = fs.get()) != '\n');
+                    }
 
-                            ++line; 
-                            pos = 0;
-                            currState = "";
-                        }
-                        
+                    else
+                    {
+                        // printOutput(filename, line, pos, "single line comment", "//");
+
+                        while((ch = fs.get()) != '\n');
+
+                        ++line; 
+                        pos = 0;
+                        currState = "";
+                    }
+
                 }
 
                 else
                 {
-                   // printOutput(filename, line, pos, "single line comment", "//");
+                    // printOutput(filename, line, pos, "single line comment", "//");
 
-                     while((ch = fs.get()) != '\n');
+                    while((ch = fs.get()) != '\n');
 
-                     ++line; 
-                     pos = 0;
-                     currState = "";
+                    ++line; 
+                    pos = 0;
+                    currState = "";
                 }
             }
 
@@ -274,7 +284,7 @@ void readtoken(string filename)
 
                     if (currChar == '*' && nextChar == '/') 
                     {
-                    //    printOutput(filename, line, pos, "multi-line comment", "/* */");
+                        //    printOutput(filename, line, pos, "multi-line comment", "/* */");
                         line = line + temp; 
 
                         fs.get();
@@ -291,10 +301,10 @@ void readtoken(string filename)
                         break;
                     }
                 }
-            
+
                 currState = "";
             }
-            
+
             else if(isPunctuator(currState) && !isPunctuator(nextState)) 
             {
                 int punctuatorPos = pos - currState.length() + 1;
@@ -314,9 +324,9 @@ void readtoken(string filename)
                 sl += nextChar;
                 nextChar = fs.get();
             }
-            
+
             if(nextChar == EOF)
-                printError(filename, line, pos, "unterminated string-literal");
+                printError(filename, line, pos, "unterminated string");
             else
             {
                 sl += fs.get();
