@@ -1,4 +1,4 @@
-/*/r/n
+/*
  *My test program  a = b * c
  *
 */
@@ -10,13 +10,16 @@ const char* foo(int) {
 //  main()
 int     main    (   int argc, char **argv) {
 //\
-jkjkj
+jkjkj 
 
 //\kjkljlj
 
-//my
 
+// my 
 char x ='\';
+char c ='?';
+
+
 char b = '';
 char h = 'a';
 
