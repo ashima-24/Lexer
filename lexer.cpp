@@ -234,8 +234,31 @@ void readtoken(string filename)
                         //printOutput(filename, line, pos, "two line comment", "//\\");
                         ++line;
                         
-                        while((ch = fs.get()) != '\n'); 
-                       
+                        while((ch = fs.get()) != '\n') 
+                    {
+                        currChar = ch ;
+                        nextChar = fs.peek();
+
+                        if(ch == '/' && nextChar == '\\')
+                        {
+                            currChar = fs.get();
+                            nextChar = fs.peek();
+
+                            if(nextChar == '\n')
+                            {   
+                                nextChar = fs.get();
+                                ++line;
+                            
+                            }
+                             else if(nextChar == '/')
+                            {   
+                                ch = fs.get();
+                                --line;
+                                break;
+                            }      
+                        }
+                        
+                    }           
                         ++line; 
                         pos = 0;
                         currState = "";
@@ -254,7 +277,7 @@ void readtoken(string filename)
 
                 else
                 {
-                    //printOutput(filename, line, pos, "single line comment", "//");
+                   // printOutput(filename, line, pos, "single line comment", "//");
                     while((ch = fs.get()) != '\n' );
 
                     ++line; 
@@ -278,7 +301,7 @@ void readtoken(string filename)
                     
                     if (currChar == '*' && nextChar == '/') 
                     {
-                          // printOutput(filename, line, pos, "multi-line comment", "/* */");
+                       //  printOutput(filename, line, pos, "multi-line comment", "/* */");
                         line = line + temp; 
                         fs.get();
                         break;
