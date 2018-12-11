@@ -261,7 +261,7 @@ void readtoken(string filename)
 
                     if (currChar == '\n') 
                     {
-                        //printOutput(filename, line, pos, "two line comment", "//\\");
+                     //   printOutput(filename, line, pos, "two line comment", "//\\");
                         ++line;
                         
                         while((ch = fs.get()) != '\n') 
@@ -296,9 +296,10 @@ void readtoken(string filename)
                     }
                     else
                     {
-                       //printOutput(filename, line, pos, "single line comment", "//");
-                        while((ch = fs.get()) != '\n' );
-                        ++line; 
+                      // printOutput(filename, line, pos, "single line comment", "//");
+                       while((ch = fs.get())  != '\n' );
+                       
+                       ++line; 
                         pos = 0;
                         currState = "";
                     }
@@ -307,9 +308,10 @@ void readtoken(string filename)
 
                 else
                 {
-                   // printOutput(filename, line, pos, "single line comment", "//");
-                    while((ch = fs.get()) != '\n' );
-
+                    //printOutput(filename, line, pos, "single line comment", "//");
+                    
+                    while((ch = fs.get()) != '\n');
+                    
                     ++line; 
                     pos = 0;
                     currState = "";
@@ -331,7 +333,7 @@ void readtoken(string filename)
                     
                     if (currChar == '*' && nextChar == '/') 
                     {
-                       //  printOutput(filename, line, pos, "multi-line comment", "/* */");
+                      //   printOutput(filename, line, pos, "multi-line comment", "/* */");
                         line = line + temp; 
                         fs.get();
                         break;
@@ -366,6 +368,27 @@ void readtoken(string filename)
 
             while(((nextChar = fs.peek()) != '\"') && (nextChar != EOF))
             {
+                /*if (nextChar == '\\')
+                {
+                    currChar = fs.get();
+                    sl += currChar;
+                    nextChar = fs.peek();
+
+                    if(nextChar != 'a'||
+                        nextChar != 'b'||
+                        nextChar != 'r'||
+                        nextChar != 'f'||
+                        nextChar != 't'||
+                        nextChar != 'v'||
+                        nextChar != '\''||
+                        nextChar != '\?'||
+                        nextChar != '\"'||
+                        nextChar != 'n'||
+                        nextChar != 'v');
+                    
+                        printError(filename, line, pos, "invalid escape sequence");
+                
+                }*/
                 sl += nextChar;
                 nextChar = fs.get();
                 
@@ -389,6 +412,10 @@ int main(int argc, char *argv[])
     if (str.compare("--tokenize") == 0)
     {
         readtoken(argv[2]);   
+    }
+    else if (str.compare("--parse") == 0)
+    {
+        readtoken(argv[2]); 
     }
     else 
     {

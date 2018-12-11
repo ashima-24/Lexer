@@ -10,7 +10,12 @@ const char* foo(int) {
 //  main()
 int     main    (   int argc, char **argv) {
 //\
-jkjkj 
+jkjkj/\
+jljjll/\
+oioioi/\
+jjojojo/\
+jljljljlj/\/
+gjgjg
 
 //\kjkljlj
 
@@ -18,6 +23,15 @@ jkjkj
 // my 
 char x ='\';
 char c ='?';
+char d =''';
+char r ='"';
+char t ='\\';
+char y ='\?';
+char u ='\';
+char i ='?';
+char g = '\b';
+
+char k = '\g';
 
 
 char b = '';
@@ -34,7 +48,7 @@ char h = 'a';
     int d = a+++++a;
     int *ptr = &a;
     
-    char abc[] = "ghef[]\n/**/";
+    char abc[] = "ghef[]\j/**/";
     char[] abc = "'xyz'";
 
     double e = (a + (c*d) / a);
