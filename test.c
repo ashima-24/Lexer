@@ -1,62 +1,60 @@
 /*
  *My test program  a = b * c
- *
-*/
+ sample test 
+ */
 
 const char* foo(int) {
     return "abcd";
 }
 
-//  main()
-int     main    (   int argc, char **argv) {
-//\
-jkjkj/\
-jljjll/\
-oioioi/\
-jjojojo/\
-jljljljlj/\/
-gjgjg
+// Sample \
+    Comment \
+    in multiple lines
 
-//\kjkljlj
+    //  main()
+    //  main()
 
 
-// my 
-char x ='\';
-char c ='?';
-char d =''';
-char r ='"';
-char t ='\\';
-char y ='\?';
-char u ='\';
-char i ='?';
-char g = '\b';
+    int     main    (   int argc, char **argv) {
+        char abcd[] = "Some \
+                       Sample \
+                       String";
+        char x ='\';
+        char c ='tytt';
+        char d =''';
+        char r ='"';
+        char t ='\\';
+        char y ='\?';
+        char u ='\';
+        char i ='?';
+        char g = '\b';
 
-char k = '\g';
+        //  char k = '\g';
 
 
-char b = '';
-char h = 'a';
+        char b = '';
+        char h = 'a';
 
 
-    int  a123 =12;
-    int a = (1 + 2234);
-    float g = 2234.0;
-    float r = 0.00;
-    float dy = .9;
-    int b = a++;
-    int c = ++b;
-    int d = a+++++a;
-    int *ptr = &a;
-    
-    char abc[] = "ghef[]\j/**/";
-    char[] abc = "'xyz'";
+        int  a123 =12;
+        int a = (1 + 2234);
+        float g = 2234.0;
+        float r = 0.00;
+        float dy = .9;
+        int b = a++;
+        int c = ++b;
+        int d = a+++++a;
+        int *ptr = &a;
 
-    double e = (a + (c*d) / a);
+        char abc[] = "ghef[]\j/**/";
+        char[] abc = "'xyz'";
 
-    printf("Hi %d \n", 34);
+        double e = (a + (c*d) / a);
 
-    foo(*ptr);
+        printf("Hi %d \n", 34);
 
-    return 0;
-}
+        foo(*ptr);
+
+        return 0;
+    }
 
