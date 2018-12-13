@@ -199,8 +199,9 @@ void readtoken(string filename)
             tmp += ch;
             tmp += currChar;
            charPos += 2;
+
             char nextChar = fs.peek();
-            
+
             if(nextChar == '\n')
             {
                 printError(filename, line, pos, "unterminated constant ");
@@ -213,23 +214,31 @@ void readtoken(string filename)
                 while(1)
                {   
                     nextChar = fs.get();
+                    
                     tmp += nextChar;
                     ++charPos;
-                    currChar = fs.get();
-
-                    if(currChar == '\'')
-                        break;
-                    else if(currChar == '\n')
+                    
+                    if(nextChar == '\'')
+                     {   
+                         break;
+                    }
+                    else if(nextChar == '\n')
                     {
                         printError(filename, line, pos, "unterminated constant ");
+                        ++line;
+                        pos = 0;
                         break;
                     }
-                   tmp += currChar;
+                    
                 }
-                tmp += currChar;
-                printOutput(filename, line, pos, "constant", tmp);
-                ++pos;
+                
+                if(nextChar == '\'')
+                {
+                    printOutput(filename, line, pos, "constant", tmp);
+                charPos -= 1;
                 pos += charPos;
+                }
+                
             }
             else if((nextChar == 'a' ||
                     nextChar == 'b' ||
@@ -255,14 +264,14 @@ void readtoken(string filename)
                          }
                          else{
                                 ++pos;
-                                printError(filename, line, pos, "invalid escape sequences");
+                                printError(filename, line, pos, "unterminated constant");
                                 pos += 3 ; 
                             }
                     }
             
             else if(currChar =='\'')
             {   ++pos;
-                printOutput(filename, line, pos, "invalid constant", tmp);
+                printOutput(filename, line, pos, "empty constant", tmp);
                 pos += 1;
             }
             else if (nextChar == EOF )
@@ -370,13 +379,18 @@ void readtoken(string filename)
                             ++tempLine;
                             charPos = 0;
                             ++count;
+                            if(prevChar == '\\' && currChar == '\r' && nextChar == '\n')
+                            {   
+                                currChar = fs.get();
+                            }
+                            currChar = fs.get();
                         }
                         else if (currChar == '\n' || (currChar == '\r' && nextChar == '\n'))
                             {    ++tempLine;
                                 charPos = 0 ; 
                             }
                     }
-
+                    
                 sl += currChar;
                 ++charPos;
                 prevChar = currChar;
@@ -392,7 +406,7 @@ void readtoken(string filename)
                 printOutput(filename, line, pos, "string-literal", sl);
                 
                 if(count > 0)
-                    pos = charPos;
+                    pos = charPos + 1;
                 else 
                     pos += charPos;
                 line += tempLine;
