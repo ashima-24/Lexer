@@ -1,7 +1,8 @@
 /*
  *My test program  a = b * c
  sample test 
- */
+  */
+
 
 const char* foo(int) {
     return "abcd";
@@ -11,7 +12,7 @@ const char* foo(int) {
     Comment \
     in multiple lines
 
-    //  main()
+    //  main() 
     //  main()
 
 
@@ -20,7 +21,7 @@ const char* foo(int) {
                        Sample \
                        String";
         char x ='\';
-        char c ='tytt';
+        char c ='tytt;
         char d =''';
         char r ='"';
         char t ='\\';
@@ -29,7 +30,7 @@ const char* foo(int) {
         char i ='?';
         char g = '\b';
 
-        //  char k = '\g';
+         char k = '\g';
 
 
         char b = '';

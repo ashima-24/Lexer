@@ -193,6 +193,7 @@ void readtoken(string filename)
         }
         else if(ch == '\'')
         {   
+            ++pos;
             int charPos = 0;
             char currChar = fs.get();
             string tmp = "";
@@ -202,14 +203,10 @@ void readtoken(string filename)
 
             char nextChar = fs.peek();
 
-            if(nextChar == '\n')
-            {
-                printError(filename, line, pos, "unterminated constant ");
-                ++line;
-            }
-            else if ((currChar != '\\') && (currChar != '\''))
+
+             if ((currChar != '\\') && (currChar != '\''))
             { 
-                ++pos;
+               // ++pos;
                 
                 while(1)
                {   
@@ -257,31 +254,45 @@ void readtoken(string filename)
                         
                         if(nextChar == '\'')
                         {
-                            ++pos;
+                          //  valid escape sequence
                             tmp += nextChar;
                             printOutput(filename, line, pos, "constant", tmp);
                             pos += 3;
                          }
                          else{
-                                ++pos;
+                            //    ++pos;
                                 printError(filename, line, pos, "unterminated constant");
                                 pos += 3 ; 
                             }
                     }
             
+            else if((nextChar != 'a' ||
+                    nextChar != 'b' ||
+                    nextChar != 'r' ||
+                    nextChar != 't' ||
+                    nextChar != 'v' ||
+                    nextChar != 'f' ||
+                    nextChar != '\'' ||
+                    nextChar != '\"' ||
+                    nextChar != '\?' ||
+                    nextChar != '\\' ||
+                    nextChar != 'n') && (currChar == '\\' ))
+                    {
+                        tmp += fs.get();
+                        nextChar = fs.get();
+
+                        printError(filename, line, pos, "invalid constant");
+                        pos += 3 ; 
+                    }
+
             else if(currChar =='\'')
-            {   ++pos;
+            {   
                 printOutput(filename, line, pos, "empty constant", tmp);
                 pos += 1;
             }
             else if (nextChar == EOF )
                 printError(filename, line, pos, "unterminated constant");
             
-             else
-             {
-                printError(filename, line, pos, "invalid constant");
-                break;
-            }
             currState = "";
         }
         else if(isPunctuatorChar(ch))
@@ -297,14 +308,17 @@ void readtoken(string filename)
                 char currChar = fs.get();
                 char nextChar = fs.peek();
                 
-                while(currChar != EOF) {
-                    if (currChar == '\n' || currChar == '\r') {
-                        if ((prevChar == '\\' && currChar == '\n') ||
-                                (prevChar == '\\' && currChar == '\r' && nextChar == '\n')) {
+                while(currChar != EOF) 
+                {
+                    if (currChar == '\n' || currChar == '\r') 
+                    {
+                        if ((prevChar == '\\' && currChar == '\n')  || (prevChar == '\\' && currChar == '\r'  && nextChar == '\n' ))
+                        {
                             ++line;
                         }
-                        else if (currChar == '\n' || (currChar == '\r' && nextChar == '\n')){
-                            if (currChar == '\n')
+                        else if((currChar == '\n' || currChar == '\r')  && (nextChar == '\n'))
+                        {
+                            if (currChar == '\n' )
                                 fs.unget();
                             ++line;
                             break;
@@ -325,7 +339,7 @@ void readtoken(string filename)
                 char currChar = fs.get();
                 char nextChar = fs.peek();
                 
-                while(currChar !=EOF)
+                while(currChar != EOF)
                 {
                    currChar = fs.get();
                     nextChar = fs.peek();
@@ -333,18 +347,19 @@ void readtoken(string filename)
                     if (currChar == '*' && nextChar == '/') 
                     {
                       //   printOutput(filename, line, pos, "multi-line comment", "/* */");
-                        line = line + temp; 
+                       
+                      //line = line + temp;  
                         fs.get();
                         break;
                     } 
-                    else if (currChar == '\n' || (currChar == '\r' && nextChar == '\n' )) 
+                    else if (currChar == '\n'  || (currChar == '\r'   && nextChar == '\n' )) 
                     {
                         ++temp;
                     }
 
-
                 }
-
+                line = temp;
+                
                 currState = "";
             }
 
