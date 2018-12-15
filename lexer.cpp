@@ -281,7 +281,7 @@ int readtoken(string filename)
                 }
                 printError(filename, line, pos, "invalid constant");
                 pos += charPos;
-                return 1;
+               return 1;
             }
             currState = "";
         }
@@ -300,15 +300,15 @@ int readtoken(string filename)
 
                 while(currChar != EOF) 
                 {
-                    if (currChar == '\n' || currChar == '\r') 
+                    if ((currChar == '\n' || currChar == '0x0d') || (currChar == '\r' || currChar == '0x0a')) 
                     {
-                        if ((prevChar == '\\' && currChar == '\n')  || (prevChar == '\\' && currChar == '\r'  && nextChar == '\n' ))
+                        if ((prevChar == '\\' && (currChar == '\n' || currChar == '0x0d'))  || (prevChar == '\\' && (currChar == '\r'||currChar == '0x0a')  && (nextChar == '\n' || nextChar == '0x0d' )))
                         {
                             ++line;
                         }
-                        else if((currChar == '\n' || currChar == '\r')  && (nextChar == '\n'))
+                        else if(((currChar == '\n' || currChar == '0x0d') || (currChar == '\r' || currChar == '0x0a' ))  && (nextChar == '\n' || nextChar == '0x0d'))
                         {
-                            if (currChar == '\n' )
+                            if (currChar == '\n' || currChar == '0x0d' )
                                 fs.unget();
                             ++line;
                             break;
@@ -342,7 +342,7 @@ int readtoken(string filename)
                         fs.get();
                         break;
                     } 
-                    else if (currChar == '\n'  || (currChar == '\r'   && nextChar == '\n' )) 
+                    else if ((currChar == '\n' || currChar == '0x0d')  || ((currChar == '\r'|| currChar == '0x0a')   && (nextChar == '\n' ||nextChar == '0x0d' )) )
                     {
                         ++temp;
                     }
