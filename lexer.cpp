@@ -63,7 +63,7 @@ bool isPunctuator(string str) {
     return false;
 }
 
-void readtoken(string filename)
+int readtoken(string filename)
 {
 
     string  key[] = {"char",
@@ -220,6 +220,7 @@ void readtoken(string filename)
                         printError(filename, line, pos, "unterminated constant ");
                         ++line;
                         pos = 0;
+                        return 1;
                         break;
                     }
                 }
@@ -253,17 +254,23 @@ void readtoken(string filename)
                 } else
                 {
                     printError(filename, line, pos, "unterminated constant");
-                    pos += 3 ; 
+                    pos += 3 ;
+
+                    return 1;
                 }       
             }
             else if(currChar =='\'')
             {          
                 printError(filename, line, pos, "empty character");
                 pos += 1;
+                return 1;
             }
             else if (nextChar == EOF )
+            {
                 printError(filename, line, pos, "unterminated constant");
-            else
+                return 1;
+
+            } else
             {
                 while (1)
                 {
@@ -274,6 +281,7 @@ void readtoken(string filename)
                 }
                 printError(filename, line, pos, "invalid constant");
                 pos += charPos;
+                return 1;
             }
             currState = "";
         }
@@ -330,7 +338,7 @@ void readtoken(string filename)
                     {
                         //   printOutput(filename, line, pos, "multi-line comment", "/* */");
 
-                        //line = line + temp;  
+                        line = line + temp;  
                         fs.get();
                         break;
                     } 
@@ -340,7 +348,7 @@ void readtoken(string filename)
                     }
 
                 }
-                line = temp;
+                //line = temp;
 
                 currState = "";
             }
@@ -388,6 +396,22 @@ void readtoken(string filename)
                     }
                 }
 
+                else if(!(nextChar == 'a' ||
+                            nextChar == 'b' ||
+                            nextChar == 'r' ||
+                            nextChar == 't' ||
+                            nextChar == 'v' ||
+                            nextChar == 'f' ||
+                            nextChar == '\'' ||
+                            nextChar == '\"' ||
+                            nextChar == '\?' ||
+                            nextChar == '\\' ||
+                            nextChar == '\r' ||
+                            nextChar == '\n') && (currChar == '\\' ))
+                {
+                    printError(filename, line, pos, "invalid escape sequences in string");
+                    return 1;
+                }
 
                 sl += currChar;
                 ++charPos;
@@ -397,8 +421,11 @@ void readtoken(string filename)
             }
 
             if(currChar == EOF )
+            {
                 printError(filename, line, pos, "unterminated string");
-            else
+                return 1;
+
+            } else
             {
                 sl += currChar;
                 printOutput(filename, line, pos, "string-literal", sl);
