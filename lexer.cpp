@@ -241,8 +241,7 @@ int readtoken(string filename)
                 } else
                 {
                     printError(filename, line, pos, "unterminated constant");
-                    pos += 3 ;
-
+                    //pos += 3 ;
                     return 1;
                 }       
             }
@@ -261,7 +260,7 @@ int readtoken(string filename)
             else
             {
                 printError(filename, line, pos, "invalid constant");
-                return 1;
+                 return 1;
             }
             currState = "";
         }
@@ -286,7 +285,7 @@ int readtoken(string filename)
                         {
                             ++line;
                         }
-                        else if((currChar == '\n' || currChar == '\r')  && nextChar == '\n' )
+                        else if(currChar == '\n' || (currChar == '\r'  && nextChar == '\n') )
                         {
                             if (currChar == '\n'  )
                                 fs.unget();
@@ -327,13 +326,12 @@ int readtoken(string filename)
                         fs.get();
                         break;
                     } 
-                    else if(currChar == '\n'   || (currChar == '\r'   && nextChar == '\n') )
+                    else if(currChar == '\n'   || (currChar == '\r'   && nextChar == '\n' ))
                     {
                         ++temp;
                     }
 
                 }
-                //line = temp;
                 if (currChar == EOF)
                 {
                     printError(filename, line, pos, "unterminated comment");
@@ -400,7 +398,7 @@ int readtoken(string filename)
                             nextChar == '\n') && (currChar == '\\' ))
                 {
                     printError(filename, line, pos, "invalid escape sequences in string");
-                    return 1;
+                   return 1;
                 }
 
                 sl += currChar;
