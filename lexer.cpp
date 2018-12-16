@@ -7,7 +7,7 @@
 using namespace std;
 
 void printError(string fileName, int line, int column, const string &message) {
-    cerr<<fileName<<":"<<line<<":"<<column<<": error : "<<message<<"\n";
+    cerr<<fileName<<":"<<line<<":"<<column<<": error: "<<message<<"\n";
 }
 
 void printOutput(string fileName, int line, int column, const string &output, const string &message) {
