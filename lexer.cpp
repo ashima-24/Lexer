@@ -14,15 +14,6 @@ void printOutput(string fileName, int line, int column, const string &output, co
     cout<<fileName<<":"<<line<<":"<<column<<": "<<output<<" "<<message<<"\n";
 }
 
-bool isNextLineChar(string str) {
-    if(str == "\n" ||
-            str == "\r\n")
-
-        return true;
-    else 
-        return false;
-}
-
 bool isPunctuatorChar(char ch) {
     char punctuators[] = {
         '+', '-', '/', '%', '~' , 
@@ -215,7 +206,7 @@ int readtoken(string filename)
                 } else 
                 {
                     printError(filename, line, pos, "invalid  constant ");
-                   return 1;
+                      return 1;
                 }
             } else if((nextChar == 'a' ||
                         nextChar == 'b' ||
@@ -241,19 +232,19 @@ int readtoken(string filename)
                 } else
                 {
                     printError(filename, line, pos, "unterminated constant");
-                   return 1;
+                      return 1;
                 }       
             }
             else if(currChar =='\'')
             {          
                 printError(filename, line, pos, "empty character");
                 pos += 1;
-                return 1;
+                 return 1;
             }
             else if (nextChar == EOF )
             {
                 printError(filename, line, pos, "unterminated constant");
-                return 1;
+                 return 1;
 
             }
             else
@@ -325,16 +316,18 @@ int readtoken(string filename)
                         fs.get();
                         break;
                     } 
-                    else if(currChar == '\n' || currChar == '\r' || (currChar == '\r'   && nextChar == '\n' ))
+                    else if(currChar == '\n' || currChar =='\r'|| (currChar == '\r'   && nextChar == '\n' ))
                     {
                         ++temp;
+                        if(currChar == '\r' && nextChar == '\n')
+                            fs.get();
                     }
 
                 }
                 if (currChar == EOF)
                 {
                     printError(filename, line, pos, "unterminated comment");
-                    return 1;
+                       return 1;
                 }
                 currState = "";
             }
@@ -398,23 +391,23 @@ int readtoken(string filename)
                             nextChar == '\n') && (currChar == '\\' ))
                 {
                     printError(filename, line, pos, "invalid escape sequences in string");
-                   return 1;
+                        return 1;
                 }
-                
-                
-                    sl += currChar;
 
-                    ++charPos;
-                    ++count_space;
-                    prevChar = currChar;
-                    currChar = fs.get();
-                    nextChar = fs.peek();
+
+                sl += currChar;
+
+                ++charPos;
+                ++count_space;
+                prevChar = currChar;
+                currChar = fs.get();
+                nextChar = fs.peek();
             }
 
             if(currChar == EOF )
             {
                 printError(filename, line, pos, "unterminated string");
-                return 1;
+                   return 1;
 
             } 
             else
