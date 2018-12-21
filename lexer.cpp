@@ -176,7 +176,8 @@ int readtoken(string filename)
                 currChar = fs.get();
                 nextChar = fs.peek();
             }
-
+            fs.unget();
+            temp -= 1 ;
             printOutput(filename, line, pos, "constant", constVal);
             pos += temp;
             currState = "";
@@ -232,14 +233,14 @@ int readtoken(string filename)
                 } else
                 {
                     printError(filename, line, pos, "unterminated constant");
-                      return 1;
+                     return 1;
                 }       
             }
             else if(currChar =='\'')
             {          
                 printError(filename, line, pos, "empty character");
                 pos += 1;
-                 return 1;
+                return 1;
             }
             else if (nextChar == EOF )
             {
@@ -391,7 +392,7 @@ int readtoken(string filename)
                             nextChar == '\n') && (currChar == '\\' ))
                 {
                     printError(filename, line, pos, "invalid escape sequences in string");
-                        return 1;
+                      return 1;
                 }
 
 
