@@ -215,7 +215,7 @@ int readtoken(string filename)
                 } else 
                 {
                     printError(filename, line, pos, "invalid  constant ");
-                     return 1;
+                     //return 1;
 
                 }
             } else if((nextChar == 'a' ||
@@ -242,25 +242,25 @@ int readtoken(string filename)
                 } else
                 {
                     printError(filename, line, pos, "unterminated constant");
-                        return 1;
+                   //     return 1;
                 }       
             }
             else if(currChar =='\'')
             {          
                 printError(filename, line, pos, "empty character");
                 pos += 1;
-                 return 1;
+                // return 1;
             }
             else if (nextChar == EOF )
             {
                 printError(filename, line, pos, "unterminated constant");
-                  return 1;
+                //  return 1;
 
             }
             else
             {
                 printError(filename, line, pos, "invalid constant");
-                    return 1;
+                  //  return 1;
             }
             currState = "";
         }
@@ -270,6 +270,7 @@ int readtoken(string filename)
 
             string nextState = currState;
             nextState += fs.peek();
+            bool multiline=false;
 
             if (nextState == "//")
             {
@@ -279,29 +280,35 @@ int readtoken(string filename)
 
                 while(currChar != EOF) 
                 {
-                    if (currChar == '\\'  ) 
+                    if ((currChar == '\n' || currChar == '\r') && prevChar =='\\' ) 
                     {
-                        if (nextChar =='\n' || nextChar == 0x0A || nextChar =='\r' || nextChar == 0x0D)
-                        {
-                            ++line;
-                        }   
-                        else if( nextChar == EOF)
-                        {
-                            printError(filename, line, pos, "unterminated comment");
-                                 return 1;
-                        }
+                        multiline=true;
+                        ++line;
                     }
-                    else if( prevChar == '\\' && (currChar=='\r' || currChar == 0x0D) && (nextChar =='\n' || nextChar == 0x0A))
-                    {
-                        //++line;
+                    else if((prevChar !='\\' && nextChar == '\n' && currChar == '\r')){
                         break;
                     }
-                    else if(prevChar != '\\' && (currChar == '\n' || currChar == 0x0A))
+                    else if(multiline==true && currChar =='\\' && (nextChar == '\n' || nextChar == '\r') ){
+                        multiline=true;
+                        //++line;
+                    }
+                    else if(multiline==true && prevChar !='\\' && (nextChar == '\n' || currChar == '\r') )
                     {
+                        break;
+                    }
+                    else if(multiline==false && ((prevChar !='\\' && currChar == '\n') || (prevChar !='\\' && currChar == '\r' && nextChar == '\n'))){
                         ++line;
                         break;
                     }
-
+                    else if(currChar =='\\' && nextChar == EOF){
+                        printError(filename, line, pos, "unterminated comment");
+                       // return 1;
+                    }
+                    else
+                    {
+                        
+                            
+                    }
                     prevChar = currChar;
                     currChar = fs.get();
                     nextChar = fs.peek();
@@ -315,15 +322,16 @@ int readtoken(string filename)
                 char currChar = fs.get();
                 char nextChar = fs.peek();
                 //++pos;
-                int tempPos = 2 ;
-                while(currChar != EOF)
+                 pos+= 1 ;
+            int initialpos = pos;
+                 while(currChar != EOF)
                 {
                     currChar = fs.get();
                     nextChar = fs.peek();
 
                     if (currChar == '*' && nextChar == '/') 
                     {
-                        tempPos += 2;
+                        pos+= 2 ;
                         line = line + temp;  
                         fs.get();
                         break;
@@ -334,14 +342,15 @@ int readtoken(string filename)
                         if((currChar == '\r' || currChar == 0x0d) && (nextChar == '\n' || nextChar == 0x0a))
                             fs.get();
                     }
-                    ++tempPos;
+                    ++pos;
                 }
                 if (currChar == EOF)
                 {
+                    pos = initialpos-1;
                     printError(filename, line, pos, "unterminated comment");
-                      return 1;
+                     // return 1;
                 }
-                pos = tempPos;
+                //pos = tempPos;
                 currState = "";
             }
 
@@ -363,14 +372,15 @@ int readtoken(string filename)
             int charPos = 0;
             int tempLine = 0 ;
             int count_space = 0;
+            int slash=0;
 
             ++charPos;
             int count = 0;
-            while((currChar != '\"') && (currChar != EOF))
+            while(currChar != EOF)
             {
-
                 if (currChar == '\\'  ) 
                 {
+                    slash++;
                     if (nextChar =='\n' || nextChar =='\r')
                     {
 
@@ -386,31 +396,27 @@ int readtoken(string filename)
                         printError(filename, line, pos, "unterminated string");
                          return 1;
                     }
-
-                    
-                else if((nextChar == 'a' ||
-                            nextChar == 'b' ||
-                            nextChar == 'r' ||
-                            nextChar == 't' ||
-                            nextChar == 'v' ||
-                            nextChar == 'f' ||
-                            nextChar == 'n' ||
-                            nextChar == '\'' ||
-                            nextChar == '\"' ||
-                            nextChar == '?' ||
-                            nextChar == '\n' ||
-                            nextChar == '\r' ||
-                            nextChar == '\\'))
-                {
-
-                }
-                else
-                {
-                    printError(filename, line, pos, "invalid escape sequences in string");
-                     return 1;
-                }
-                
-                
+                    else if((nextChar == 'a' ||
+                                nextChar == 'b' ||
+                                nextChar == 'r' ||
+                                nextChar == 't' ||
+                                nextChar == 'v' ||
+                                nextChar == 'f' ||
+                                nextChar == 'n' ||
+                                nextChar == '\'' ||
+                                nextChar == '\"' ||
+                                nextChar == '?' ||
+                                nextChar == '\n' ||
+                                nextChar == '\r' ||
+                                nextChar == '\\'))
+                    {
+                        //slash--;
+                    }
+                    else
+                    {
+                        printError(filename, line, pos, "invalid escape sequences in string");
+                        // return 1;
+                    }
                 }
                 else if( prevChar == '\\' && currChar=='\r' && nextChar=='\n')
                 {
@@ -424,10 +430,11 @@ int readtoken(string filename)
                     charPos = 0 ;
                     break;
                 }
-
-
-
-
+                else if(currChar == '\"' && ((prevChar!='\\' && slash%2!=0) || (slash%2==0)))
+                {
+                    //cout<<slash;
+                    break;
+                }
                 sl += currChar;
 
                 ++charPos;
@@ -440,7 +447,7 @@ int readtoken(string filename)
             if(currChar == EOF || currChar == '\n' || (currChar == '\r' && nextChar == '\n') )
             {
                 printError(filename, line, pos, "unterminated string");
-                return 1;
+                //return 1;
 
             } 
             else

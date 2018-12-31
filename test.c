@@ -1,7 +1,10 @@
+/*//*/ l();
+     m = n//**/o
++ p;
 /*
  *My test program  a = b * c
- sample test 
-  */
+ sample test
+ */ 
 
 
 const char* foo(int) {
@@ -12,7 +15,7 @@ const char* foo(int) {
     Comment \
     in multiple lines
 
-    //  main() 
+    //  main()
     //  main()
 
 
@@ -30,8 +33,7 @@ const char* foo(int) {
         char i ='?';
         char g = '\b';
 
-         char k = '\g';
-
+        char k = '\g';
 
         char b = '';
         char h = 'a';
@@ -47,12 +49,18 @@ const char* foo(int) {
         int d = a+++++a;
         int *ptr = &a;
 
-        char abc[] = "ghef[]\j/**/";
-        char[] abc = "'xyz'";
 
+        char uio = "\a" 
+            str1[] = "\\"         
+            str2[] = "\\\\"       
+            str3[] = "\\\\\\"     
+
+            char abc[] = "ghef[]\j/**/";
+        char[] abc = "'xy\fz'";
+/*
         double e = (a + (c*d) / a);
 
-        printf("Hi %d \n", 34);
+        printf("Hi %d \n, 34");
 
         foo(*ptr);
 
