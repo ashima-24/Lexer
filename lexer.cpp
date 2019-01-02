@@ -302,6 +302,15 @@ int readtoken(string filename)
                         ++line;
                         break;
                     }
+                   else if(multiline == true && ((prevChar !='\\' && (currChar == '\n' || currChar == 0x0a)) || (prevChar !='\\' && (currChar == '\r' || currChar == 0x0d) 
+                    && (nextChar == '\n' || nextChar == 0x0a))))
+                    {
+                         
+                        ++line;
+                        break;
+                    }
+                    
+                    
                     else if(currChar =='\\' && nextChar == EOF)
                     {
                         printError(filename, line, pos, "unterminated comment");
@@ -324,7 +333,7 @@ int readtoken(string filename)
                 char currChar = fs.get();
                 char nextChar = fs.peek();
                 //++pos;
-                pos+= 1 ;
+                pos += 1 ;
                 int initialpos = pos;
                 while(currChar != EOF)
                 {
@@ -342,7 +351,8 @@ int readtoken(string filename)
                     {
                         ++temp;
                         if((currChar == '\r' || currChar == 0x0d) && (nextChar == '\n' || nextChar == 0x0a))
-                            fs.get();
+                           fs.get();
+                        pos = -1;
                     }
                     ++pos;
                 }
@@ -353,6 +363,7 @@ int readtoken(string filename)
                      return 1;
                 }
                 //pos = tempPos;
+               // pos = 0;
                 currState = "";
             }
 

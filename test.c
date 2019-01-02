@@ -4,7 +4,7 @@
 /*
  *My test program  a = b * c
  sample test
- */ 
+ */jhgf 
 
 
 const char* foo(int) {
@@ -57,7 +57,7 @@ const char* foo(int) {
 
             char abc[] = "ghef[]\j/**/";
         char[] abc = "'xy\fz'";
-/*
+
         double e = (a + (c*d) / a);
 
         printf("Hi %d \n, 34");
