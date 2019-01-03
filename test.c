@@ -1,3 +1,4 @@
+#include<iostream.h>
 /*//*/ l();
      m = n//**/o
 + p;
